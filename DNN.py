@@ -26,6 +26,8 @@ class DeepModel():
         for layer in self.Decoder.layers:
             print(layer.get_output_at(0).get_shape().as_list())
 
+        
+
 
     # Block definition of the cnn layer
     def ConvLayer(self, filters):
@@ -52,10 +54,10 @@ class DeepModel():
 
     def Decoder(self):
         input = Input(shape=(8,8,512))
-        L1 = Conv2DTranspose(filters=128, kernel_size=2, strides=(2,2))(input)
-        L2 = Conv2DTranspose(filters=64, kernel_size=6, strides=(1, 1))(L1)
-
-        return Model(input, L2)
+        L1 = Conv2DTranspose(filters=128, kernel_size=7, strides=(1,1))(input)
+        L2 = Conv2DTranspose(filters=64, kernel_size=4, strides=(2, 2))(L1)
+        L3 = Conv2DTranspose(filters=3, kernel_size=6, strides=(2, 2))(L2)
+        return Model(input, L3)
 
 if __name__ == '__main__':
     run = DeepModel()
