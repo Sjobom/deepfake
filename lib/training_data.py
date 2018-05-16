@@ -17,12 +17,16 @@ def add_images_to_numpy_array(images):
     warped = []
     original = []
     for img_path in images:
-        img = cv2.imread(img_path)
+        img = color_adjust(cv2.imread(img_path))
         # img = random_transform(img, random_transform_args)
         warped_img, original_img = random_warp( image=img, coverage=coverage )
         warped.append(warped_img)
         original.append(original_img)
     return np.float32(warped), np.float32(original)
+
+
+def color_adjust(img):
+    return img / 255.0
 
 
 def random_transform(image, rotation_range, zoom_range, shift_range, random_flip):
