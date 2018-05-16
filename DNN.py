@@ -91,9 +91,9 @@ class DeepModel():
 
     def Decoder(self):
         input = Input(shape=(12, 12, 3))
-        L1 = Conv2DTranspose(filters=128, kernel_size=7, strides=(1,1))(input)
-        L2 = Conv2DTranspose(filters=64, kernel_size=4, strides=(2, 2))(L1)
-        L3 = Conv2DTranspose(filters=3, kernel_size=6, strides=(2, 2))(L2)
+        L1 = Conv2DTranspose(filters=128, kernel_size=3, strides=(1,1))(input)
+        L2 = Conv2DTranspose(filters=64, kernel_size=5, strides=(2, 2))(L1)
+        L3 = Conv2DTranspose(filters=3, kernel_size=4, strides=(2, 2))(L2)
         return Model(input, L3)
 
 if __name__ == '__main__':

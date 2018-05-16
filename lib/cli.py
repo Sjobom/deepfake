@@ -4,7 +4,6 @@ import argparse
 import os
 import sys
 
-from plugins.PluginLoader import PluginLoader
 
 
 class ScriptExecutor(object):
@@ -25,8 +24,6 @@ class ScriptExecutor(object):
             from scripts.train import Train as script
         elif self.command == 'convert':
             from scripts.convert import Convert as script
-        elif self.command == 'gui':
-            from scripts.gui import Gui as script
         else:
             script = None
         return script
@@ -34,7 +31,7 @@ class ScriptExecutor(object):
     def execute_script(self, arguments):
         """ Run the script for called command """
         script = self.import_script()
-        args = (arguments, ) if self.command != 'gui' else (arguments, self.subparsers)
+        args = (arguments, )
         process = script(*args)
         process.process()
 
@@ -393,12 +390,6 @@ class ConvertArgs(ExtractConvertArgs):
                                       "folder, they'll be skipped during "
                                       "conversion. If no aligned dir is "
                                       "specified, all faces will be converted"})
-        argument_list.append({"opts": ("-t", "--trainer"),
-                              "type": str,
-                              # case sensitive because this is used to load a plug-in.
-                              "choices": PluginLoader.get_available_models(),
-                              "default": PluginLoader.get_default_model(),
-                              "help": "Select the trainer that was used to create the model"})
         argument_list.append({"opts": ("-c", "--converter"),
                               "type": str,
                               # case sensitive because this is used to load a plugin.
@@ -503,6 +494,12 @@ class TrainArgs(FaceSwapArgs):
                               "help": "Input directory. A directory "
                                       "containing training images for face B. "
                                       "Defaults to 'input'"})
+        argument_list.append({"opts": ("-P", "--input-P"),
+                              "action": DirFullPaths,
+                              "dest": "input_P",
+                              "default": "input_P",
+                              "help": "Input directory. A directory "
+                                      "containing training images with faces for pre-training of encoder. "})
         argument_list.append({"opts": ("-m", "--model-dir"),
                               "action": DirFullPaths,
                               "dest": "model_dir",
@@ -516,13 +513,6 @@ class TrainArgs(FaceSwapArgs):
                               "default": 100,
                               "help": "Sets the number of iterations before "
                                       "saving the model"})
-        argument_list.append({"opts": ("-t", "--trainer"),
-                              "type": str,
-                              "choices": PluginLoader.get_available_models(),
-                              "default": PluginLoader.get_default_model(),
-                              "help": "Select which trainer to use, Use "
-                                      "LowMem for cards with less than 2GB of "
-                                      "VRAM"})
         argument_list.append({"opts": ("-bs", "--batch-size"),
                               "type": int,
                               "default": 64,
@@ -563,27 +553,9 @@ class TrainArgs(FaceSwapArgs):
                               "dest": "verbose",
                               "default": False,
                               "help": "Show verbose output"})
-        # This is a hidden argument to indicate that the GUI is being used,
-        # so the preview window should be redirected Accordingly
-        argument_list.append({"opts": ("-gui", "--gui"),
-                              "action": "store_true",
-                              "dest": "redirect_gui",
+        argument_list.append({"opts": ("-pt", "--pre_training"),
+                              "type": bool,
                               "default": False,
-                              "help": argparse.SUPPRESS})
-        return argument_list
+                              "help": "Activate pre-training for the encoder"})
 
-
-class GuiArgs(FaceSwapArgs):
-    """ Class to parse the command line arguments for training """
-
-    @staticmethod
-    def get_argument_list():
-        """ Put the arguments in a list so that they are accessible from both
-        argparse and gui """
-        argument_list = []
-        argument_list.append({"opts": ("-d", "--debug"),
-                              "action": "store_true",
-                              "dest": "debug",
-                              "default": False,
-                              "help": "Output to Shell console instead of GUI console"})
         return argument_list
