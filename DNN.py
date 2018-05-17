@@ -3,6 +3,7 @@ from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras import Model
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Activation, Input, Dense, Dropout, Conv2D, MaxPooling2D, Flatten, Reshape, Conv2DTranspose
+import keras
 from keras.utils import np_utils
 import numpy as np
 import pickle
@@ -15,27 +16,38 @@ IMAGE_SIZE = (64, 64, 3)
 class DeepModel():
 
     def __init__(self):
-        self.Encoder = self.NewEncoder()
-        for layer in self.Encoder.layers:
-            print(layer.get_output_at(0).get_shape().as_list())
-        self.decoder = self.Decoder()
+        #self.Encoder = self.NewEncoder()
+        #for layer in self.Encoder.layers:
+            #print(layer.get_output_at(0).get_shape().as_list())
+        #self.decoder = self.Decoder()
 
-        print('New Network')
-        for layer in self.decoder.layers:
-            print(layer.get_output_at(0).get_shape().as_list())
+        #print('New Network')
+        #for layer in self.decoder.layers:
+            #print(layer.get_output_at(0).get_shape().as_list())
 
         # Create the shared encoder
-        self.encoder = self.NewEncoder()
+        #self.encoder = self.NewEncoder()
 
         # The different decoders
-        self.decoder_1 = self.Decoder()
-        self.decoder_2 = self.Decoder()
+        #self.decoder_1 = self.Decoder()
+        #self.decoder_2 = self.Decoder()
+
+        self.decoder_1 = self.newNN()
+        self.decoder_2 = self.newNN()
+
 
         input = Input(shape=IMAGE_SIZE)
+        #print('New Network')
+        #for layer in self.decoder_2.layers:
+        #   print(layer.get_output_at(0).get_shape().as_list())
 
         # Create the to autoencoders with shared encoder
-        self.autoencoder_1 = Model(input, self.decoder_1(self.encoder(input)))
-        self.autoencoder_2 = Model(input, self.decoder_2(self.encoder(input)))
+        #self.autoencoder_1 = Model(input, self.decoder_1(self.encoder(input)))
+        #self.autoencoder_2 = Model(input, self.decoder_2(self.encoder(input)))
+
+        self.autoencoder_1 = Model(input, self.decoder_1(input))
+        self.autoencoder_2 = Model(input, self.decoder_2(input))
+        # self.autoencoder_2
 
         # Compile the autoencoders
         optimizer = Adam(lr=5e-5, beta_1=0.5, beta_2=0.999)
@@ -56,6 +68,21 @@ class DeepModel():
             x = Conv2D(filters * 4, kernel_size=3, padding='same')(x)
             return x
         return cnn_layer
+
+    def newNN(self):
+        input = Input(shape=IMAGE_SIZE)
+        L1 = Conv2D(filters=3, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(input)
+        L1 = Conv2D(filters=128, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+        L1 = Conv2D(filters=512, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+        L1 = Conv2D(filters=1024, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+        L1 = Conv2D(filters=512, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+        L1 = Conv2D(filters=256, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+        L1 = Conv2D(filters=128, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+        L1 = Conv2DTranspose(filters=128, kernel_size=3, padding='same')(L1)
+        L1 = Conv2D(filters=3, kernel_size=3, data_format="channels_last", activation='relu', padding='same')(L1)
+
+
+        return Model(input, L1)
 
     def NewEncoder(self):
         input = Input(shape=IMAGE_SIZE)
