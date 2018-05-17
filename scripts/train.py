@@ -96,7 +96,7 @@ class Train(object):
                 self.set_tf_allow_growth()
             for dimm in [256, 512, 1024]:
                 for lr in [5e-4, 5e-5, 5e-6]:
-                    print("-------- TESTING DIMM-" + dimm + " LR-" + lr + " ---------")
+                    print("-------- TESTING DIMM-" + str(dimm) + " LR-" + str(lr) + " ---------")
                     trainer = Train_DNN(DIM_ENCODER=dimm, lr=lr)
                     trainer.preTraining(self.warped_images[0], self.original_images[0], self.args.batch_size)
                     del(trainer)
