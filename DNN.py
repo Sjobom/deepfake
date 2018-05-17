@@ -17,6 +17,8 @@ IMAGE_SIZE = (64, 64, 3)
 class DeepModel():
 
     def __init__(self, DIM_ENCODER=1024, lr=5e-5):
+        self.DIM_ENCODER = DIM_ENCODER
+        self.lr = lr
         self.Encoder = self.NewEncoder()
         for layer in self.Encoder.layers:
             print(layer.get_output_at(0).get_shape().as_list())
@@ -74,7 +76,7 @@ class DeepModel():
         convLayer = self.conv(1024)(convLayer)
 
         # Fully connected layers
-        denseLayer = Dense(DIM_ENCODER)(Flatten()(convLayer))
+        denseLayer = Dense(self.DIM_ENCODER)(Flatten()(convLayer))
         denseLayer = Dense(4 * 4 * 1024)(denseLayer)
         denseLayer = Reshape((4, 4, 1024))(denseLayer)
 
@@ -92,7 +94,7 @@ class DeepModel():
         convLayer = Conv2D(filters=1024, kernel_size=5, strides=2, activation='relu', padding='same')(convLayer)
 
         # Fully connected layers
-        denseLayer = Dense(DIM_ENCODER)(Flatten()(convLayer))
+        denseLayer = Dense(self.DIM_ENCODER)(Flatten()(convLayer))
         denseLayer = Dense(4*4*1024)(denseLayer)
         denseLayer = Reshape((4,4,1024))(denseLayer)
 

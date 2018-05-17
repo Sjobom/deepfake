@@ -6,6 +6,8 @@ import numpy as np
 class Train_DNN:
     def __init__(self, DIM_ENCODER=1024, lr=5e-5):
         self.model = DNN.DeepModel(DIM_ENCODER, lr)
+        self.DIM_ENCODER = DIM_ENCODER
+        self.lr = lr
 
         self.autoencoder_A = self.model.autoencoder_1
         self.autoencoder_B = self.model.autoencoder_2
@@ -17,26 +19,6 @@ class Train_DNN:
         # Train the two networks
         history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=5, batch_size=batch_size, callbacks=callbacks_list1, validation_split=0.1)
         history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=5, batch_size=batch_size, callbacks=callbacks_list2, validation_split=0.1)
-        # Save the trained networks to file
-        self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
-        self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
-
-        # Save history_A to file
-        with open("./pre_trainHistoryDict_AE_A", "wb") as file_pi:
-            pickle.dump(history_A.history, file_pi)
-
-        # Save history_B to file
-        with open("./pre_trainHistoryDict_AE_B", "wb") as file_pi:
-            pickle.dump(history_B.history, file_pi)
-
-
-    def testParams(self, inputX, targetsY):
-        callbacks_list1, callbacks_list2 = self.defineCallBacks()
-        # Train the two networks
-        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=5, batch_size=5, callbacks=callbacks_list1,
-                                           validation_split=0.1)
-        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=5, batch_size=5, callbacks=callbacks_list2,
-                                           validation_split=0.1)
         # Save the trained networks to file
         self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
         self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
@@ -66,10 +48,10 @@ class Train_DNN:
         with open("./trainHistoryDict_AE_B", "wb") as file_pi:
             pickle.dump(history_B.history, file_pi)
 
-    def defineCallBacks(self, earlyStopping=True):
+    def defineCallBacks(self, earlyStopping=True, ):
         # Define csv logger, for logging loss and acc for every epoch
-        csv_logger1 = CSVLogger("training_autoencoder_A" + ".log", separator=',', append=True)
-        csv_logger2 = CSVLogger("training_autoencoder_B" + ".log", separator=',', append=True)
+        csv_logger1 = CSVLogger("training_autoencoder_A dim-" + str(self.DIM_ENCODER) + " lr-" + str(self.lr) + ".log", separator=',', append=True)
+        csv_logger2 = CSVLogger("training_autoencoder_B dim-" + str(self.DIM_ENCODER) + " lr-" + str(self.lr) + ".log", separator=',', append=True)
 
         # define the checkpoint, for saving models
         filepath1 = "model_1_-{epoch:02d}-{val_loss:.2f}-{loss:.2f}.hdf5"
