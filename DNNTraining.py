@@ -19,23 +19,33 @@ class Train_DNN:
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
         # Train the two networks
         history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list1, validation_split=0.1)
-        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
+
         # Save the trained networks to file
         self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
-        self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
 
         # Save history_A to file
         with open("./history/pre_trainHistoryDict_AE_A", "wb") as file_pi:
             pickle.dump(history_A.history, file_pi)
+
+        # Cleanup
+        del self.autoencoder_A
+        del history_A
+        gc.collect()
+
+
+        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
+        self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
+
+
 
         # Save history_B to file
         with open("./history/pre_trainHistoryDict_AE_B", "wb") as file_pi:
             pickle.dump(history_B.history, file_pi)
 
         # Cleanup
-        del self.autoencoder_A
+        self.model.delModel()
+        del self.model
         del self.autoencoder_B
-        del history_A
         del history_B
         gc.collect()
 
@@ -57,8 +67,6 @@ class Train_DNN:
             pickle.dump(history_B.history, file_pi)
 
         # Cleanup
-        self.model.delModel()
-        del self.model
         del self.autoencoder_A
         del self.autoencoder_B
         del history_A
