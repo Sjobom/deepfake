@@ -3,6 +3,8 @@ from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint, CS
 import pickle
 import numpy as np
 import gc
+from sklearn.utils import shuffle
+
 
 class Train_DNN:
     def __init__(self, DIM_ENCODER=1024, lr=5e-5):
@@ -15,38 +17,76 @@ class Train_DNN:
 
     # For training the data on general faces in order for the network to be able to encode/ decode the
     # general patterns of a human face, this might be good since the small amount of actual data we have
-    def preTraining(self, inputX, targetsY, epoch):
+    def preTraining(self, inputX, targetsY, epochs=5):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
+
+        #inputX, targetsY = shuffle(inputX, targetsY, random_state=0)
+
+        lenValDat = int(round(np.shape(inputX)[0]/10))
+        valX = inputX[0:lenValDat]
+        valY = targetsY[0:lenValDat]
+        triningX = inputX[lenValDat:-1]
+        trainingY = targetsY[lenValDat:-1]
+
+        best_val_loss_A = 99
+        best_val_loss_B = 99
+        val_rounds_A = 0;
+        val_rounds_B = 0;
+
+        earlyStopping = 4
+
         # Train the two networks
-        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list1, validation_split=0.1)
+        history_A = dict()
+        history_B = dict()
+        history_A['loss'] = []; history_A['val_loss'] = []
+        history_B['loss'] = []; history_B['val_loss'] = []
+        for epoch in range(epochs):
+            epoch_history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=2, batch_size=100, validation_data=(valX, valY))
+            epoch_history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=2, batch_size=100, validation_data=(valX, valY))
+
+            # Store history
+            history_A['loss'].append(epoch_history_A.history['loss'])
+            history_B['loss'].append(epoch_history_B.history['loss'])
+            history_A['val_loss'].append(epoch_history_A.history['val_loss'])
+            history_B['val_loss'].append(epoch_history_B.history['val_loss'])
+
+            val_loss_A = epoch_history_A.history['val_loss'][-1]
+            val_loss_B = epoch_history_B.history['val_loss'][-1]
+            # Write val_loss and loss to file
+            if val_loss_A < best_val_loss_A:
+                best_val_loss_A = val_loss_A
+                val_rounds_A = 0
+                # Save best A
+                self.autoencoder_A.save('./model/autoencoderA_preTrain.hdf5')
+                # Save history_A to file
+                with open("./history/trainHistoryDict_AE_A", "wb") as file_pi:
+                    pickle.dump(history_A, file_pi)
+            else:
+                val_rounds_A += 1
+            if val_loss_B < best_val_loss_B:
+                best_val_loss_B = val_loss_B
+                val_rounds_B = 0
+                # Save best B
+                self.autoencoder_B.save('./model/autoencoderB_preTrain.hdf5')
+                # Save history_B to file
+                with open("./history/trainHistoryDict_AE_B", "wb") as file_pi:
+                    pickle.dump(history_B, file_pi)
+            else:
+                val_rounds_B += 1
+            # Test if early stopping should happen
+            if val_rounds_A > earlyStopping and val_rounds_B > earlyStopping:
+                break
+
 
         # Save the trained networks to file
-        self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
-
-        # Save history_A to file
-        with open("./history/pre_trainHistoryDict_AE_A", "wb") as file_pi:
-            pickle.dump(history_A.history, file_pi)
-
-        # Cleanup
-        del self.autoencoder_A
-        del history_A
-        gc.collect()
-
-
-        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
-        self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
-
-
-
-        # Save history_B to file
-        with open("./history/pre_trainHistoryDict_AE_B", "wb") as file_pi:
-            pickle.dump(history_B.history, file_pi)
+        #self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
+        #self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
 
         # Cleanup
         self.model.delModel()
         del self.model
+        del self.autoencoder_A
         del self.autoencoder_B
-        del history_B
         gc.collect()
 
     def train_on_A_and_B(self, inputX_A, targetsY_A, inputX_B, targetsY_B):
