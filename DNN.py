@@ -10,12 +10,13 @@ import pickle
 from keras.models import load_model
 import tensorflow as tf
 
-DIM_ENCODER = 1024
+#DIM_ENCODER = 1024
+#DIM_ENCODER = 64
 IMAGE_SIZE = (64, 64, 3)
 
 class DeepModel():
 
-    def __init__(self):
+    def __init__(self, DIM_ENCODER=1024, lr=5e-5):
         self.Encoder = self.NewEncoder()
         for layer in self.Encoder.layers:
             print(layer.get_output_at(0).get_shape().as_list())
@@ -39,7 +40,7 @@ class DeepModel():
         self.autoencoder_2 = Model(input, self.decoder_2(self.encoder(input)))
 
         # Compile the autoencoders
-        optimizer = Adam(lr=5e-5, beta_1=0.5, beta_2=0.999)
+        optimizer = Adam(lr=lr, beta_1=0.5, beta_2=0.999)
         self.autoencoder_1.compile(optimizer=optimizer, loss='mean_absolute_error')
         self.autoencoder_2.compile(optimizer=optimizer, loss='mean_absolute_error')
 
