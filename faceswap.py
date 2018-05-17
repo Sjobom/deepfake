@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """ The master faceswap.py script """
 import sys
-
 import lib.cli as cli
 
 if sys.version_info[0] < 3:

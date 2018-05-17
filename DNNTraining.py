@@ -1,6 +1,7 @@
 import DNN
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 import pickle
+import numpy as np
 
 class Train_DNN:
     def __init__(self):
@@ -14,14 +15,11 @@ class Train_DNN:
     def preTraining(self, inputX, targetsY):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
         # Train the two networks
-        #self.autoencoder_A.fit(inputX, targetsY, epochs=10, batch_size=100, callbacks=callbacks_list1, validation_split=0.1)
-        #self.autoencoder_B.fit(inputX, targetsY, epochs=10, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
-        self.autoencoder_A.fit(inputX, targetsY, epochs=10, batch_size=10)
-        self.autoencoder_B.fit(inputX, targetsY, epochs=10, batch_size=100, validation_split=0.1)
-
+        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=2, batch_size=5, validation_split=0.1)
+        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=2, batch_size=5, validation_split=0.1)
         # Save the trained networks to file
-        history_A = self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
-        history_B = self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
+        self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
+        self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
 
         # Save history_A to file
         with open("./pre_trainHistoryDict_AE_A", "wb") as file_pi:
@@ -34,11 +32,11 @@ class Train_DNN:
     def train_on_A_and_B(self, inputX_A, targetsY_A, inputX_B, targetsY_B):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
         # train on the spesific data
-        self.autoencoder_A.fit(inputX_A, targetsY_A, epochs=10000, batch_size=100, callbacks=callbacks_list1, validation_split=0.1)
-        self.autoencoder_B.fit(inputX_B, targetsY_B, epochs=10000, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
+        history_A = self.autoencoder_A.fit(inputX_A, targetsY_A, epochs=10000, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
+        history_B = self.autoencoder_B.fit(inputX_B, targetsY_B, epochs=10000, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
 
-        history_A = self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
-        history_B = self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
+        self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
+        self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
 
         # Save history_A to file
         with open("./trainHistoryDict_AE_A", "wb") as file_pi:
@@ -83,6 +81,9 @@ class Train_DNN:
 
 if __name__ == '__main__':
     run = Train_DNN()
+    train_X = np.random.rand(20, 64, 64, 3)
+    train_Y = np.random.rand(20, 64, 64, 3)
+    run.preTraining(train_X, train_Y)
 
 
 
