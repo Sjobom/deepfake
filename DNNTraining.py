@@ -15,8 +15,8 @@ class Train_DNN:
     def preTraining(self, inputX, targetsY):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
         # Train the two networks
-        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=2, batch_size=5, callbacks=callbacks_list2, validation_split=0.1)
-        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=2, batch_size=5, callbacks=callbacks_list2, validation_split=0.1)
+        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=10, batch_size=5, callbacks=callbacks_list2, validation_split=0.1)
+        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=10, batch_size=5, callbacks=callbacks_list2, validation_split=0.1)
         # Save the trained networks to file
         self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
         self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
