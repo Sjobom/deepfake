@@ -15,8 +15,8 @@ class Train_DNN:
     def preTraining(self, inputX, targetsY):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
         # Train the two networks
-        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=2, batch_size=5, validation_split=0.1)
-        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=2, batch_size=5, validation_split=0.1)
+        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=2, batch_size=5, callbacks=callbacks_list2, validation_split=0.1)
+        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=2, batch_size=5, callbacks=callbacks_list2, validation_split=0.1)
         # Save the trained networks to file
         self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
         self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
@@ -55,9 +55,9 @@ class Train_DNN:
         filepath1 = "model_1_-{epoch:02d}-{val_loss:.2f}-{val_acc:.2f}-{acc:.2f}-{loss:.2f}.hdf5"
         filepath2 = "model_2_-{epoch:02d}-{val_loss:.2f}-{val_acc:.2f}-{acc:.2f}-{loss:.2f}.hdf5"
         checkpoint1 = ModelCheckpoint(filepath1, monitor='loss', verbose=1, save_best_only=True, mode='min',
-                                      period=100)
+                                      period=2)
         checkpoint2 = ModelCheckpoint(filepath2, monitor='loss', verbose=1, save_best_only=True, mode='min',
-                                      period=100)
+                                      period=2)
 
         # Early stopping
         earlystop = EarlyStopping(monitor='val_acc', min_delta=0.00001, patience=50, verbose=0, mode='auto')

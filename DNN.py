@@ -10,7 +10,7 @@ import pickle
 from keras.models import load_model
 import tensorflow as tf
 
-DIM_ENCODER = 512
+DIM_ENCODER = 1024
 IMAGE_SIZE = (64, 64, 3)
 
 class DeepModel():
