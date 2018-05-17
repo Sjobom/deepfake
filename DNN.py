@@ -51,6 +51,10 @@ class DeepModel():
         for layer in self.autoencoder_1.layers:
             print(layer.get_output_at(0).get_shape().as_list())
 
+    def converter(self, swap):
+        autoencoder = self.autoencoder_2 if not swap else self.autoencoder_1
+        return lambda img: autoencoder.predict(img)
+
     def delModel(self):
         del self.autoencoder_1
         del self.autoencoder_2
