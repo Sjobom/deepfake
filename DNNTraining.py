@@ -57,6 +57,8 @@ class Train_DNN:
             pickle.dump(history_B.history, file_pi)
 
         # Cleanup
+        self.model.delModel()
+        del self.model
         del self.autoencoder_A
         del self.autoencoder_B
         del history_A

@@ -9,6 +9,7 @@ import numpy as np
 import pickle
 from keras.models import load_model
 import tensorflow as tf
+import gc
 
 #DIM_ENCODER = 1024
 #DIM_ENCODER = 64
@@ -50,6 +51,10 @@ class DeepModel():
         for layer in self.autoencoder_1.layers:
             print(layer.get_output_at(0).get_shape().as_list())
 
+    def delModel(self):
+        del self.autoencoder_1
+        del self.autoencoder_2
+        gc.collect()
 
     # Block definition of the cnn layer
     def ConvLayer(self, filters):
