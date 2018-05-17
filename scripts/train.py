@@ -4,6 +4,7 @@
 import os
 import sys
 import threading
+import gc
 
 import cv2
 import tensorflow as tf
@@ -98,6 +99,8 @@ class Train(object):
                     trainer = Train_DNN(DIM_ENCODER=dimm, lr=lr)
                     trainer.preTraining(self.warped_images[0], self.original_images[0], self.args.batch_size)
                     del(trainer)
+                    gc.collect()
+
             # trainer = Train_DNN()
             # if (self.args.pre_training):
             #     trainer.preTraining(self.warped_images[0], self.original_images[0])

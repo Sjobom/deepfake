@@ -2,6 +2,7 @@ import DNN
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 import pickle
 import numpy as np
+import gc
 
 class Train_DNN:
     def __init__(self, DIM_ENCODER=1024, lr=5e-5):
@@ -24,12 +25,19 @@ class Train_DNN:
         self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
 
         # Save history_A to file
-        with open("./pre_trainHistoryDict_AE_A", "wb") as file_pi:
+        with open("./history/pre_trainHistoryDict_AE_A", "wb") as file_pi:
             pickle.dump(history_A.history, file_pi)
 
         # Save history_B to file
-        with open("./pre_trainHistoryDict_AE_B", "wb") as file_pi:
+        with open("./history/pre_trainHistoryDict_AE_B", "wb") as file_pi:
             pickle.dump(history_B.history, file_pi)
+
+        # Cleanup
+        del self.autoencoder_A
+        del self.autoencoder_B
+        del history_A
+        del history_B
+        gc.collect()
 
     def train_on_A_and_B(self, inputX_A, targetsY_A, inputX_B, targetsY_B):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
@@ -41,21 +49,28 @@ class Train_DNN:
         self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
 
         # Save history_A to file
-        with open("./trainHistoryDict_AE_A", "wb") as file_pi:
+        with open("./history/trainHistoryDict_AE_A", "wb") as file_pi:
             pickle.dump(history_A.history, file_pi)
 
         # Save history_B to file
-        with open("./trainHistoryDict_AE_B", "wb") as file_pi:
+        with open("./history/trainHistoryDict_AE_B", "wb") as file_pi:
             pickle.dump(history_B.history, file_pi)
+
+        # Cleanup
+        del self.autoencoder_A
+        del self.autoencoder_B
+        del history_A
+        del history_B
+        gc.collect()
 
     def defineCallBacks(self, earlyStopping=True, ):
         # Define csv logger, for logging loss and acc for every epoch
-        csv_logger1 = CSVLogger("training_autoencoder_A dim-" + str(self.DIM_ENCODER) + " lr-" + str(self.lr) + ".log", separator=',', append=True)
-        csv_logger2 = CSVLogger("training_autoencoder_B dim-" + str(self.DIM_ENCODER) + " lr-" + str(self.lr) + ".log", separator=',', append=True)
+        csv_logger1 = CSVLogger("./logs/training_autoencoder_A dim-" + str(self.DIM_ENCODER) + " lr-" + str(self.lr) + ".log", separator=',', append=True)
+        csv_logger2 = CSVLogger("./logs/training_autoencoder_B dim-" + str(self.DIM_ENCODER) + " lr-" + str(self.lr) + ".log", separator=',', append=True)
 
         # define the checkpoint, for saving models
-        filepath1 = "model_1_-{epoch:02d}-{val_loss:.2f}-{loss:.2f}.hdf5"
-        filepath2 = "model_2_-{epoch:02d}-{val_loss:.2f}-{loss:.2f}.hdf5"
+        filepath1 = "./model/model_1_-{epoch:02d}-{val_loss:.2f}-{loss:.2f}.hdf5"
+        filepath2 = "./model/model_2_-{epoch:02d}-{val_loss:.2f}-{loss:.2f}.hdf5"
         #filepath2 = "model_2_-{epoch:02d}-{val_loss:.2f}-{val_acc:.2f}-{acc:.2f}-{loss:.2f}.hdf5"
         checkpoint1 = ModelCheckpoint(filepath1, monitor='loss', verbose=1, save_best_only=True, mode='min',
                                       period=2)
