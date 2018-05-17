@@ -14,11 +14,11 @@ class Train_DNN:
 
     # For training the data on general faces in order for the network to be able to encode/ decode the
     # general patterns of a human face, this might be good since the small amount of actual data we have
-    def preTraining(self, inputX, targetsY, batch_size):
+    def preTraining(self, inputX, targetsY, epoch):
         callbacks_list1, callbacks_list2 = self.defineCallBacks()
         # Train the two networks
-        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=5, batch_size=batch_size, callbacks=callbacks_list1, validation_split=0.1)
-        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=5, batch_size=batch_size, callbacks=callbacks_list2, validation_split=0.1)
+        history_A = self.autoencoder_A.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list1, validation_split=0.1)
+        history_B = self.autoencoder_B.fit(inputX, targetsY, epochs=epoch, batch_size=100, callbacks=callbacks_list2, validation_split=0.1)
         # Save the trained networks to file
         self.autoencoder_A.save('autoencoderA_preTrain.hdf5')
         self.autoencoder_B.save('autoencoderB_preTrain.hdf5')
@@ -66,6 +66,9 @@ class Train_DNN:
         earlystop = EarlyStopping(monitor='val_loss', min_delta=0.00001, patience=5, verbose=0, mode='auto')
         callbacks_list1 = [earlystop, checkpoint1, csv_logger1]
         callbacks_list2 = [earlystop, checkpoint2, csv_logger2]
+
+        callbacks_list1 = [earlystop, csv_logger1]
+        callbacks_list2 = [earlystop, csv_logger2]
 
         return callbacks_list1, callbacks_list2
 
