@@ -26,27 +26,27 @@ class DeepModel():
             #print(layer.get_output_at(0).get_shape().as_list())
 
         # Create the shared encoder
-        #self.encoder = self.NewEncoder()
+        self.encoder = self.NewEncoder()
 
         # The different decoders
-        #self.decoder_1 = self.Decoder()
-        #self.decoder_2 = self.Decoder()
+        self.decoder_1 = self.Decoder()
+        self.decoder_2 = self.Decoder()
 
-        self.decoder_1 = self.newNN()
-        self.decoder_2 = self.newNN()
+        #self.decoder_1 = self.newNN()
+        #self.decoder_2 = self.newNN()
 
 
         input = Input(shape=IMAGE_SIZE)
-        #print('New Network')
-        #for layer in self.decoder_2.layers:
-        #   print(layer.get_output_at(0).get_shape().as_list())
+        print('New Network')
+        for layer in self.decoder_2.layers:
+           print(layer.get_output_at(0).get_shape().as_list())
 
         # Create the to autoencoders with shared encoder
-        #self.autoencoder_1 = Model(input, self.decoder_1(self.encoder(input)))
-        #self.autoencoder_2 = Model(input, self.decoder_2(self.encoder(input)))
+        self.autoencoder_1 = Model(input, self.decoder_1(self.encoder(input)))
+        self.autoencoder_2 = Model(input, self.decoder_2(self.encoder(input)))
 
-        self.autoencoder_1 = Model(input, self.decoder_1(input))
-        self.autoencoder_2 = Model(input, self.decoder_2(input))
+        #self.autoencoder_1 = Model(input, self.decoder_1(input))
+        #self.autoencoder_2 = Model(input, self.decoder_2(input))
         # self.autoencoder_2
 
         # Compile the autoencoders
@@ -88,7 +88,7 @@ class DeepModel():
         input = Input(shape=IMAGE_SIZE)
         # CNN layers
         L1 = Conv2D(filters=128, kernel_size=5, data_format="channels_last", activation='relu')(input)
-        L2 = Conv2D(filters=256, kernel_size=5, activation='relu')(L1)
+        L2 = Conv2D(filters=512, kernel_size=5, activation='relu')(L1)
 
         # Fully connected layers
         L3 = Dense(DIM_ENCODER)(Flatten()(L2))
@@ -119,7 +119,7 @@ class DeepModel():
     def Decoder(self):
         input = Input(shape=(12, 12, 3))
         L1 = Conv2DTranspose(filters=128, kernel_size=3, strides=(1,1))(input)
-        L2 = Conv2DTranspose(filters=64, kernel_size=5, strides=(2, 2))(L1)
+        L2 = Conv2DTranspose(filters=256, kernel_size=5, strides=(2, 2))(L1)
         L3 = Conv2DTranspose(filters=3, kernel_size=4, strides=(2, 2))(L2)
         return Model(input, L3)
 
