@@ -1,5 +1,4 @@
 from tensorflow.python.keras.models import load_model
-from tensorflow.python.keras import Model
 import numpy as np
 
 class EvaluateModell():
