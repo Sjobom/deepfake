@@ -1,8 +1,8 @@
 \.idea/
 \faceswap/
-.logs
-.model
-.history
+logs
+model
+history
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
