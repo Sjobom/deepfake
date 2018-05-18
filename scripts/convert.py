@@ -118,7 +118,7 @@ class Convert(object):
         # We should have a separate cli option for size
         image = converter.patch_image(image,
                                       face,
-                                      64 if "128" not in self.args.trainer else 128)
+                                      64)
         image = self.images.rotate_image(image, face.r, reverse=True)
         return image
 
