@@ -95,8 +95,8 @@ class Train(object):
             if self.args.allow_growth:
                 self.set_tf_allow_growth()
 
-            trainer = Train_DNN(DIM_ENCODER=256, lr=5e-5)
-            trainer.preTraining(self.warped_images[0], self.original_images[0], self.args.batch_size)
+            #trainer = Train_DNN(DIM_ENCODER=256, lr=5e-5)
+            #trainer.preTraining(self.warped_images[0], self.original_images[0], self.args.batch_size)
 
             # for dimm in [256, 512, 1024]:
             #     for lr in [5e-4, 5e-5, 5e-6]:
@@ -106,18 +106,19 @@ class Train(object):
             #         del(trainer)
             #         gc.collect()
 
-            # trainer = Train_DNN()
+            trainer = Train_DNN()
             # if (self.args.pre_training):
             #     trainer.preTraining(self.warped_images[0], self.original_images[0])
             # else:
-            #     trainer.train_on_A_and_B(self.warped_images[0], self.original_images[0], self.warped_images[1],
-            #                              self.original_images[1])  # Here the actual training starts!
+            trainer.train_on_A_and_B(self.warped_images[0], self.original_images[0], self.warped_images[1], self.original_images[1], self.args.batch_size)  # Here the actual training starts!
 
         except KeyboardInterrupt:
             print("Training was cancelled by the user!")
             exit(0)
         except Exception as err:
             raise err
+        print("TRAINING FINISHED SUCCESFULLY!")
+        exit(0)
 
     def monitor_preview(self):
         """ Generate the preview window and wait for keyboard input """
