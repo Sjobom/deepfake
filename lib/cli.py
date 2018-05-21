@@ -372,11 +372,20 @@ class ConvertArgs(ExtractConvertArgs):
         """ Put the arguments in a list so that they are accessible from both
         argparse and gui """
         argument_list = []
-        argument_list.append({"opts": ("-m", "--model"),
-                              "action": str,
-                              "dest": "model",
-                              "default": "own",
-                              "help": "model"})
+        argument_list.append({"opts": ("-m", "--model-dir"),
+                              "action": DirFullPaths,
+                              "dest": "model_dir",
+                              "default": "models",
+                              "help": "Model directory. A directory "
+                                      "containing the trained model you wish "
+                                      "to process. Defaults to 'models'"})
+        argument_list.append({"opts": ("-m", "--model-dir"),
+                              "action": DirFullPaths,
+                              "dest": "model_dir",
+                              "default": "models",
+                              "help": "Model directory. A directory "
+                                      "containing the trained model you wish "
+                                      "to process. Defaults to 'models'"})
         argument_list.append({"opts": ("-a", "--input-aligned-dir"),
                               "action": DirFullPaths,
                               "dest": "input_aligned_dir",
