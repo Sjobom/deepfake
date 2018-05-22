@@ -2,6 +2,7 @@ from EvaluateModel import EvaluateModel
 import numpy as np
 import sys
 from os import walk
+from lib.training_data import add_images_to_numpy_array
 import cv2
 
 class PredictedImage():
@@ -12,11 +13,12 @@ class PredictedImage():
             self.evaluate_model = EvaluateModel("")
 
     def save_image(self, img_path, save_path):
-        print(img_path)
-        img = cv2.imread(img_path)
-        print(img)
-        img  = img / 255.0
-        np.save(save_path, self.evaluate_model.evaluate_B(img))
+        #img = cv2.imread(img_path)
+        #img  = img / 255.0
+
+        warp_img, orig_img = add_images_to_numpy_array([img_path])
+
+        np.save(save_path, self.evaluate_model.evaluate_B(orig_img[0]))
 
 
 if __name__=='__main__':
