@@ -114,12 +114,14 @@ class Train_DNN:
             # Write val_loss and loss to file
             loss_A = epoch_history_A.history['loss'][-1]
             loss_B = epoch_history_B.history['loss'][-1]
-            if epoch%2 == 0:
+            save = [249, 499, 749, 999]
+            print("Epoch " + str(epoch))
+            if epoch in save:
                 self.autoencoder_A.save('./model/autoencoderA_specialized_e' + str(epoch) + '.hdf5')
                 # Save history_A to file
                 with open("./history/trainHistoryDict_AE_specialized_A", "wb") as file_pi:
                     pickle.dump(history_A, file_pi)
-            if epoch%249 == 0:
+            if epoch in save:
                 self.autoencoder_B.save('./model/autoencoderB_specialized_e' + str(epoch) + '.hdf5')
                 # Save history_B to file
                 with open("./history/trainHistoryDict_AE_specialized_B", "wb") as file_pi:

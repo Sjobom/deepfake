@@ -8,3 +8,6 @@ history
 __pycache__/
 *.py[cod]
 *$py.class
+history/
+
+model/
