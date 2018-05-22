@@ -17,18 +17,18 @@ class PredictedImage():
         #img  = img / 255.0
 
         warp_img, orig_img = add_images_to_numpy_array(image_paths)
-        print (orig_img)
-        predicted_image = self.evaluate_model.evaluate_B(orig_img)
-        print(predict_image)
-        np.save(save_path, predicted_image)
+        predicted_images = self.evaluate_model.evaluate_B(orig_img)
+
+        for i, pred_img in enumerate(predicted_images):
+            np.save(save_path + "/" + str(model) + "_" + str(i), pred_img)
 
 
+
+# Should be called like:
+# python3 PredictedImage.py  [directory for input images]  [directory path to save arrays]  [model epochs]
 if __name__=='__main__':
-    if len(sys.argv) > 3:
-        model = sys.argv[2]
-        predict_image = PredictedImage(model)
-    else:
-        predict_image = PredictedImage()
+    model = sys.argv[3]
+    predicted_images = PredictedImage(model)
 
     img_dir = sys.argv[1]
     save_dir = sys.argv[2]
@@ -36,4 +36,4 @@ if __name__=='__main__':
     for(dirpath, dirnames, files) in walk(img_dir):
         for filename in files:
             filenames.append(dirpath + "/"+ filename)
-    predict_image.save_image(filenames, save_dir)
+    predicted_images.save_image(filenames, save_dir, model)
