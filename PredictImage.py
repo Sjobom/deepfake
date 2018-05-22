@@ -17,8 +17,10 @@ class PredictedImage():
         #img  = img / 255.0
 
         warp_img, orig_img = add_images_to_numpy_array([img_path])
-
-        np.save(save_path, self.evaluate_model.evaluate_B(orig_img))
+        print (orig_img)
+        predicted_image = self.evaluate_model.evaluate_B(orig_img)
+        print(predict_image)
+        np.save(save_path, predicted_image)
 
 
 if __name__=='__main__':
