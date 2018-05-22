@@ -6,7 +6,7 @@ import re
 def LoadAndShowResult(path, caption=''):
 
     # Might need to be of dtyoe='uint8'
-    img_array = np.zeros((64, 64*4, 3))
+    img_array = np.zeros((64, 64*4, 3), dtype='uint8')
     for (root, dirnames, files) in os.walk(path):
         for file_name in files:
             print('File name: ' + str(file_name))
@@ -15,7 +15,8 @@ def LoadAndShowResult(path, caption=''):
             start = ((fileIndex-1) * 64)
             end = ((fileIndex * 64))
             print('start: ' + str(start) + ' end: ' + str(end))
-            array = np.load(os.path.join(root, file_name))
+            array = np.load(os.path.join(root, file_name)) * 255
+            #array = np.array(array, dtype='uint8')
             print('array: ' + str(array))
             print('Size: ' + str(np.shape(array)))
             print('Shape: ' + str(np.shape(img_array[:, 0:64, :])))
