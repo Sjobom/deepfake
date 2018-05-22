@@ -9,7 +9,7 @@ class PredictedImage():
         if model_name:
             self.evaluate_model = EvaluateModel(model_name)
         else:
-            self.evaluate_model = EvaluateModel()
+            self.evaluate_model = EvaluateModel("")
 
     def save_image(self, img_path, save_path):
         print(img_path)
