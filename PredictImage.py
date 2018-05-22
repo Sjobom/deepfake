@@ -12,11 +12,11 @@ class PredictedImage():
         else:
             self.evaluate_model = EvaluateModel("")
 
-    def save_image(self, img_path, save_path):
+    def save_image(self, image_paths, save_path, model):
         #img = cv2.imread(img_path)
         #img  = img / 255.0
 
-        warp_img, orig_img = add_images_to_numpy_array([img_path])
+        warp_img, orig_img = add_images_to_numpy_array(image_paths)
         print (orig_img)
         predicted_image = self.evaluate_model.evaluate_B(orig_img)
         print(predict_image)
@@ -36,5 +36,4 @@ if __name__=='__main__':
     for(dirpath, dirnames, files) in walk(img_dir):
         for filename in files:
             filenames.append(dirpath + "/"+ filename)
-    for file_path in filenames:
-        predict_image.save_image(file_path, save_dir)
+    predict_image.save_image(filenames, save_dir)

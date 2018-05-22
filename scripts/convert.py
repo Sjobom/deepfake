@@ -37,7 +37,7 @@ class Convert(object):
         self.faces.faces_detected = self.alignments.read_alignments()
 
         #model = EvaluateModel(self.args.model)
-        model = EvaluateModel()
+        model = EvaluateModel(self.args.epochs)
         converter = self.load_converter(model)
 
         batch = BackgroundGenerator(self.prepare_images(), 1)
