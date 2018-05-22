@@ -2,7 +2,7 @@ from tensorflow.python.keras.models import load_model
 import numpy as np
 
 class EvaluateModel():
-    def __init__(self, model_name = "own"):
+    def __init__(self, model_name):
         if model_name == "preTrain":
             self.autoencoder_A = load_model('./model/autoencoderA_preTrain.hdf5')
             self.autoencoder_B = load_model('./model/autoencoderB_preTrain.hdf5')
@@ -12,7 +12,7 @@ class EvaluateModel():
         elif model_name == "noPreTrain":
             self.autoencoder_A = load_model('./model/autoencoderA_spec_noPreTrain.hdf5')
             self.autoencoder_B = load_model('./model/autoencoderB_spec_noPreTrain.hdf5')
-        elif model_name == "own":
+        else:
             self.autoencoder_A = load_model('./model/autoencoderA_specialized_e999.hdf5')
             self.autoencoder_B = load_model('./model/autoencoderB_specialized_e999.hdf5')
 
