@@ -372,10 +372,10 @@ class ConvertArgs(ExtractConvertArgs):
         """ Put the arguments in a list so that they are accessible from both
         argparse and gui """
         argument_list = []
-        argument_list.append({"opts": ("-m", "--model-dir"),
-                              "action": DirFullPaths,
-                              "dest": "model_dir",
-                              "default": "models",
+        argument_list.append({"opts": ("-ep", "--epochs"),
+                              "type": int,
+                              "dest": "epochs",
+                              "default": 999,
                               "help": "Model directory. A directory "
                                       "containing the trained model you wish "
                                       "to process. Defaults to 'models'"})
