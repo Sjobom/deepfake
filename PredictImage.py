@@ -20,7 +20,7 @@ class PredictedImage():
         predicted_images = self.evaluate_model.evaluate_B(orig_img)
 
         for i, pred_img in enumerate(predicted_images):
-            np.save(save_path + str(model) + "_" + str(i), pred_img)
+            np.save(save_path + "/" + str(model) + "_" + str(i), pred_img)
 
 
 
@@ -35,5 +35,5 @@ if __name__=='__main__':
     filenames = []
     for(dirpath, dirnames, files) in walk(img_dir):
         for filename in files:
-            filenames.append(dirpath + "/"+ filename)
+            filenames.append(dirpath + filename)
     predicted_images.save_image(filenames, save_dir, model)
