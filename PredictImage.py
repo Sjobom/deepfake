@@ -20,7 +20,7 @@ class PredictedImage():
         predicted_images = self.evaluate_model.evaluate_B(orig_img)
 
         for i, pred_img in enumerate(predicted_images):
-            np.save(save_path + "/" + str(model) + "_" + str(i), pred_img)
+            np.save(save_path + str(model) + "_" + str(i), pred_img)
 
 
 
