@@ -17,7 +17,7 @@ IMAGE_SIZE = (64, 64, 3)
 
 class DeepModel():
 
-    def __init__(self, DIM_ENCODER=1024, lr=5e-5):
+    def __init__(self, DIM_ENCODER=512, lr=5e-5):
         self.DIM_ENCODER = DIM_ENCODER
         self.lr = lr
         self.Encoder = self.NewEncoder()

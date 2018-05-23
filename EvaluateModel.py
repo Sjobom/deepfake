@@ -22,6 +22,7 @@ class EvaluateModel():
         return image_A
 
     def evaluate_B(self, input_X):
+
         image_B = self.autoencoder_B.predict(input_X)
 
         return image_B
