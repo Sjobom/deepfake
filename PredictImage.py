@@ -15,7 +15,7 @@ class PredictedImage():
     def save_image(self, image_paths, save_path, model):
         #img = cv2.imread(img_path)
         #img  = img / 255.0
-        print("IMAGE_PATHS!\n" + str(image_paths) + "\n")
+
         warp_img, orig_img = add_images_to_numpy_array(image_paths)
         predicted_images = self.evaluate_model.evaluate_B(orig_img)
 
