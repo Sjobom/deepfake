@@ -3,8 +3,8 @@ import numpy as np
 
 class EvaluateModel():
     def __init__(self, epochs = 999):
-        self.autoencoder_A = load_model('./model/autoencoderA_specialized_e' + str(epochs) + '.hdf5')
-        self.autoencoder_B = load_model('./model/autoencoderB_specialized_e' + str(epochs) + '.hdf5')
+        self.autoencoder_A = load_model('./model/autoencoderA_specialized_noPreTrain_e' + str(epochs) + '.hdf5')
+        self.autoencoder_B = load_model('./model/autoencoderB_specialized_noPreTrain_e' + str(epochs) + '.hdf5')
 
     def evaluate_A(self, input_X):
         image_A = self.autoencoder_A.predict(input_X)
